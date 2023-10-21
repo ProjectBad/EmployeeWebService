@@ -5,9 +5,8 @@ namespace StaffBackEndProj.Model
 {
     public class UpdateEmployeeRequest
     {
-        [Required]
         [Range(1, Int32.MaxValue, ErrorMessage = "Значение параметра id должно быть больше 0.")]
-        public int id { get; set; }
+        public int? id { get; set; }
         [StringLength(50, ErrorMessage = "Имя не должно быть длиннее 50 символов.")]
         public string? name { get; set; }
         [StringLength(50, ErrorMessage = "Фамилия не должно быть длиннее 50 символов.")]

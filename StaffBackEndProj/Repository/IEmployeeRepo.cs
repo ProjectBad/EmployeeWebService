@@ -14,7 +14,7 @@ namespace StaffBackEndProj.Repository
         Task<ErrorOr<List<EmployeeRequest>>> GetbyCompanyIdAndDepartment(int companyid, string departmentname);
         Task<ErrorOr<EmployeeRequest>> Create(EmployeeRequest employee);
         Task<ErrorOr<EmployeeRequest>> Update(UpdateEmployeeRequest employee, int id);
-        Task<ErrorOr<EmployeeRequest>> Update(UpdateEmployeeRequest employee);
+        //Task<ErrorOr<EmployeeRequest>> Update(UpdateEmployeeRequest employee);
 
         Task<string> Remove(int id);
 

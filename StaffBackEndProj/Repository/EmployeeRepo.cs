@@ -144,9 +144,17 @@ namespace StaffBackEndProj.Repository
 
         public async Task<ErrorOr<EmployeeRequest>> Update(UpdateEmployeeRequest employee, int id)
         {
-            if (id != employee.id)
+            if ((employee.id is not null) && (id != 0) && (id != employee.id) )
             {
                 return Error.Validation(description: "Введенные ID не совпадают");
+            }
+            else
+            {
+                if((employee.id is not null) && id == 0)
+                {
+                    id = (int)employee.id;
+                }
+                
             }
             string query = "";
             var parameters = new DynamicParameters();
@@ -203,61 +211,61 @@ namespace StaffBackEndProj.Repository
             
         }
 
-        public async Task<ErrorOr<EmployeeRequest>> Update(UpdateEmployeeRequest employee)
-        {
-            string query = "";
-            var parameters = new DynamicParameters();
-            if ((employee.name is not null) || (employee.surname is not null) || (employee.phone is not null) || (employee.companyid is not null))
-            {
+        //public async Task<ErrorOr<EmployeeRequest>> Update(UpdateEmployeeRequest employee)
+        //{
+        //    string query = "";
+        //    var parameters = new DynamicParameters();
+        //    if ((employee.name is not null) || (employee.surname is not null) || (employee.phone is not null) || (employee.companyid is not null))
+        //    {
 
-                query += "UPDATE `employee` SET ";
-                query += employee.name is not null ? "`name` = @name, " : "";
-                query += employee.surname is not null ? "`surname` = @surname, " : "";
-                query += employee.phone is not null ? "`phone` = @phone, " : "";
-                query += employee.companyid is not null ? "`companyid` = @companyid, " : "";
-                query = query.Remove(query.Length - 2);
-                query += " WHERE `employee`.`id` = @id;";
+        //        query += "UPDATE `employee` SET ";
+        //        query += employee.name is not null ? "`name` = @name, " : "";
+        //        query += employee.surname is not null ? "`surname` = @surname, " : "";
+        //        query += employee.phone is not null ? "`phone` = @phone, " : "";
+        //        query += employee.companyid is not null ? "`companyid` = @companyid, " : "";
+        //        query = query.Remove(query.Length - 2);
+        //        query += " WHERE `employee`.`id` = @id;";
 
-                if (employee.name is not null) parameters.Add("name", employee.name, DbType.String);
-                if (employee.surname is not null) parameters.Add("surname", employee.surname, DbType.String);
-                if (employee.phone is not null) parameters.Add("phone", employee.phone, DbType.String);
-                if (employee.companyid is not null) parameters.Add("companyid", employee.companyid, DbType.Int32);
+        //        if (employee.name is not null) parameters.Add("name", employee.name, DbType.String);
+        //        if (employee.surname is not null) parameters.Add("surname", employee.surname, DbType.String);
+        //        if (employee.phone is not null) parameters.Add("phone", employee.phone, DbType.String);
+        //        if (employee.companyid is not null) parameters.Add("companyid", employee.companyid, DbType.Int32);
 
-                if (employee.passport is not null)
-                {
-                    query += " UPDATE `passport` SET ";
-                    query += employee.passport.Type is not null ? "`type` = @ptype, " : "";
-                    query += employee.passport.Number is not null ? "`number` = @pnumber, " : "";
-                    query = query.Remove(query.Length - 2);
-                    query += " WHERE `passport`.`id` = (SELECT `employee`.`passportid` FROM `employee` WHERE `employee`.`id` = @id);";
+        //        if (employee.passport is not null)
+        //        {
+        //            query += " UPDATE `passport` SET ";
+        //            query += employee.passport.Type is not null ? "`type` = @ptype, " : "";
+        //            query += employee.passport.Number is not null ? "`number` = @pnumber, " : "";
+        //            query = query.Remove(query.Length - 2);
+        //            query += " WHERE `passport`.`id` = (SELECT `employee`.`passportid` FROM `employee` WHERE `employee`.`id` = @id);";
 
-                    if (employee.passport.Type is not null) parameters.Add("ptype", employee.passport.Type, DbType.String);
-                    if (employee.passport.Number is not null) parameters.Add("pnumber", employee.passport.Number, DbType.String);
+        //            if (employee.passport.Type is not null) parameters.Add("ptype", employee.passport.Type, DbType.String);
+        //            if (employee.passport.Number is not null) parameters.Add("pnumber", employee.passport.Number, DbType.String);
 
-                }
+        //        }
 
-                if (employee.department is not null)
-                {
-                    query += " UPDATE `department` SET ";
-                    query += employee.department.Name is not null ? "`department`.`name` = @dname, " : "";
-                    query += employee.department.Phone is not null ? "`department`.`phone` = @dphone, " : "";
-                    query = query.Remove(query.Length - 2);
-                    query += " WHERE `department`.`id` = (SELECT `employee`.`departmentid` FROM `employee` WHERE `employee`.`id` = @id)";
+        //        if (employee.department is not null)
+        //        {
+        //            query += " UPDATE `department` SET ";
+        //            query += employee.department.Name is not null ? "`department`.`name` = @dname, " : "";
+        //            query += employee.department.Phone is not null ? "`department`.`phone` = @dphone, " : "";
+        //            query = query.Remove(query.Length - 2);
+        //            query += " WHERE `department`.`id` = (SELECT `employee`.`departmentid` FROM `employee` WHERE `employee`.`id` = @id)";
 
-                    if (employee.department.Name is not null) parameters.Add("dname", employee.department.Name, DbType.String);
-                    if (employee.department.Phone is not null) parameters.Add("dphone", employee.department.Phone, DbType.String);
-                }
-                parameters.Add("id", employee.id, DbType.Int32);
+        //            if (employee.department.Name is not null) parameters.Add("dname", employee.department.Name, DbType.String);
+        //            if (employee.department.Phone is not null) parameters.Add("dphone", employee.department.Phone, DbType.String);
+        //        }
+        //        parameters.Add("id", employee.id, DbType.Int32);
 
-            }
+        //    }
 
-            using (var connectin = this.context.CreateConnection())
-            {
-                var response = await connectin.ExecuteAsync(query, parameters);
-                return await GetbyId(employee.id);
-            }
+        //    using (var connectin = this.context.CreateConnection())
+        //    {
+        //        var response = await connectin.ExecuteAsync(query, parameters);
+        //        return await GetbyId(employee.id);
+        //    }
 
 
-        }
+        //}
     }
 }
